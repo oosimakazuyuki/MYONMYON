@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>多機能掲示板</title>
+  <style>
+    body { font-family: sans-serif; background: #f5f5f5; color: #333; padding: 20px; margin: 0; }
+    .container { max-width: 800px; margin: 0 auto; }
+    .box { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .hidden { display: none; }
+    input, textarea, button { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+    button { background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
+    button:hover { background: #0056b3; }
+    .post { border-bottom: 1px solid #eee; padding: 10px 0; }
+    .post:last-child { border-bottom: none; }
+    .post-header { font-size: 0.85em; color: #666; margin-bottom: 5px; }
+    .trip { color: #228b22; font-weight: bold; }
+    #dev-zone { background: #ffe6e6; border: 1px solid #ff9999; }
+    #board-zone { background: #e6f2ff; border: 1px solid #99ccff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 特製多機能掲示板</h1>
+
+    <!-- 🔑 管理ログイン -->
+    <div class="box">
+      <h3>🔑 関係者ログイン</h3>
+      <input type="password" id="pass-input" placeholder="管理パスワードを入力">
+      <button onclick="checkAccess()">ログイン</button>
+      <p id="error-msg" style="color: red; font-size: 0.9em; margin: 0;"></p>
+    </div>
+
+    <!-- 🟥 ① 自分（開発者）エリア -->
+    <div id="dev-zone" class="box hidden">
+      <h2>🛠 開発者（自分）専用メニュー</h2>
+      <p>システムデバッグと荒らしIPブロックの管理が可能です。</p>
+    </div>
+
+    <!-- 🟦 ② 教育委員会エリア -->
+    <div id="board-zone" class="box hidden">
+      <h2>🏛 教育委員会 専用メニュー</h2>
+      <p>全学校の書き込み監査とスレッド削除権限があります。</p>
+    </div>
+
+    <!-- 📝 新規投稿フォーム -->
+    <div class="box">
+      <h3>📝 新しい書き込み</h3>
+      <input type="text" id="user-name" placeholder="名前（#パスワード でトリップ変換）">
+      <textarea id="post-content" rows="4" placeholder="本文を入力してください"></textarea>
+      <button onclick="submitPost()">書き込む</button>
+    </div>
+
+    <!-- 💬 書き込み一覧表示 -->
+    <div class="box">
+      <h3>💬 投稿一覧</h3>
+      <div id="post-list">
+        <div class="post">
+          <div class="post-header">1: <b>管理者</b> <span class="trip">◆Admin777</span> 2026/08/26 10:30:00</div>
+          <div class="post-content">掲示板が正常に立ち上がりました！</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // SHA-256暗号化された管理者用パスワード (仮: my-dev-pass)
+    const HASH_DEV = "85ea011c206981885699b66bbd24177f022416bc28c0b78d21ff9282362b509d"; 
+    // 教育委員会用パスワード (仮: edu-board-pass)
+    const HASH_BOARD = "317c2bc332f74158978184f4f2c00df0b89ebcbf1b802611681a980cf7503fa4";
+
+    async function sha256(text) {
+      const msgUint8 = new TextEncoder().encode(text);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function checkAccess() {
+      const input = document.getElementById("pass-input").value;
+      const errorMsg = document.getElementById("error-msg");
+      const inputHash = await sha256(input);
+
+      document.getElementById("dev-zone").classList.add("hidden");
+      document.getElementById("board-zone").classList.add("hidden");
+      errorMsg.innerText = "";
+
+      if (inputHash === HASH_DEV) {
+        document.getElementById("dev-zone").classList.remove("hidden");
+        alert("開発者ログイン成功！");
+      } else if (inputHash === HASH_BOARD) {
+        document.getElementById("board-zone").classList.remove("hidden");
+        alert("教育委員会ログイン成功！");
+      } else {
+        errorMsg.innerText = "正しいパスワードを入力してください。";
+      }
+    }
+
+    function submitPost() {
+      alert("まだデータベース（GAS）と連携していないため、書き込みは保存されません。次のステップで連携させましょう！");
+    }
+  </script>
+</body>
+</html>
