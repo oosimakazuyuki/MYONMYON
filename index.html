@@ -1,12 +1,133 @@
-    .post:last-child { border-bottom: none; }
-    .post-header { font-size: 0.85em; color: #666; margin-bottom: 5px; }
-    .trip { color: #228b22; font-weight: bold; }
-    .ip-label { color: #dc3545; font-weight: bold; font-size: 0.9em; margin-left: 10px; }
-    #dev-zone { background: #ffe6e6; border: 1px solid #ff9999; }
-    #board-zone { background: #e6f2ff; border: 1px solid #99ccff; }
-    .admin-btn { width: auto; padding: 3px 8px; font-size: 0.8em; margin: 0 0 0 5px; float: right; }
-    .del-btn { background: #dc3545; }
-    .block-btn { background: #6c757d; }
+ <!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>超多機能掲示板 (極上デザイン版)</title>
+  <script src="https://jsdelivr.net"></script>
+  <style>
+    /* ✨ 全体の背景と文字の色（近未来的なダーク風グラデーション） */
+    body { 
+      font-family: 'Helvetica Neue', Arial, sans-serif; 
+      background: linear-gradient(135deg, #1e1e2f 0%, #111119 100%); 
+      color: #f5f5f7; 
+      padding: 30px 20px; 
+      margin: 0;
+      min-height: 100vh;
+    }
+    
+    .container { max-width: 750px; margin: 0 auto; }
+    
+    /* 🚀 メインタイトル */
+    h1 {
+      text-align: center;
+      color: #00fff0;
+      font-size: 2.2em;
+      text-shadow: 0 0 15px rgba(0, 255, 240, 0.4);
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+    }
+
+    /* 📦 各コンテンツの枠（ネオンの枠線と立体感） */
+    .box { 
+      background: rgba(30, 30, 45, 0.75); 
+      padding: 20px; 
+      margin-bottom: 20px; 
+      border-radius: 12px; 
+      border: 1px solid rgba(0, 255, 240, 0.15);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    
+    .box h3 {
+      margin-top: 0;
+      color: #00fff0;
+      border-left: 4px solid #00fff0;
+      padding-left: 10px;
+      font-size: 1.1em;
+    }
+    
+    .hidden { display: none; }
+    
+    /* ✍️ 入力欄（フチが光る近未来デザイン） */
+    input, textarea, button, select { 
+      width: 100%; 
+      padding: 12px; 
+      margin-bottom: 12px; 
+      background: rgba(15, 15, 25, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px; 
+      color: #fff;
+      font-size: 0.95em;
+      box-sizing: border-box; 
+      transition: all 0.3s ease;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #00fff0;
+      box-shadow: 0 0 8px rgba(0, 255, 240, 0.3);
+      outline: none;
+    }
+    
+    /* 🔵 メインのボタン（グラデーション＆ホバーで光る） */
+    button { 
+      background: linear-gradient(45deg, #007bff, #00fff0); 
+      color: #111119; 
+      border: none; 
+      cursor: pointer; 
+      font-weight: bold; 
+      font-size: 1em;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(0, 255, 240, 0.2);
+    }
+    button:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 255, 240, 0.4);
+    }
+    button:active { transform: translateY(0); }
+
+    /* 💬 投稿メッセージの枠 */
+    .post { 
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 15px; 
+      margin-bottom: 12px;
+    }
+    .post-header { 
+      font-size: 0.85em; 
+      color: #aaa; 
+      margin-bottom: 8px; 
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+    .post-header b { color: #fff; font-size: 1.05em; }
+    .post-content { 
+      font-size: 1em; 
+      line-height: 1.5; 
+      color: #e5e5e7;
+    }
+
+    /* 🏷 特殊機能用（トリップやIP） */
+    .trip { color: #39ff14; font-weight: bold; text-shadow: 0 0 5px rgba(57, 255, 20, 0.3); }
+    .ip-label { background: #dc3545; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+    
+    /* 🟥 管理画面（赤とピンクの警告ネオンカラー） */
+    #dev-zone { background: rgba(220, 53, 69, 0.1); border-color: #dc3545; box-shadow: 0 0 15px rgba(220, 53, 69, 0.2); }
+    #dev-zone h2 { color: #ff4d5e; margin-top: 0; }
+    #board-zone { background: rgba(0, 123, 255, 0.1); border-color: #007bff; box-shadow: 0 0 15px rgba(0, 123, 255, 0.2); }
+    #board-zone h2 { color: #3395ff; margin-top: 0; }
+    
+    /* 🗑 管理者ボタン */
+    .admin-btn { width: auto; padding: 4px 10px; font-size: 0.8em; margin: 0 0 0 auto; display: inline-block; color: #fff; }
+    .del-btn { background: #dc3545; box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3); }
+    .del-btn:hover { background: #bd2130; }
+    .block-btn { background: #6c757d; box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3); margin-left: 5px; }
+    .block-btn:hover { background: #5a6268; }
+    
+    /* 読み込み中アニメーション風テキスト */
+    #post-list { color: #aaa; }
   </style>
 </head>
 <body>
@@ -18,33 +139,33 @@
       <h3>🔑 関係者ログイン</h3>
       <input type="password" id="pass-input" placeholder="管理パスワードを入力">
       <button onclick="checkAccess()">ログイン</button>
-      <p id="error-msg" style="color: red; font-size: 0.9em; margin: 0;"></p>
+      <p id="error-msg" style="color: #ff4d5e; font-size: 0.9em; margin: 5px 0 0 0; font-weight: bold;"></p>
     </div>
 
     <!-- 🟥 ① 自分（開発者）エリア -->
     <div id="dev-zone" class="box hidden">
       <h2>🛠 開発者（自分）専用メニュー</h2>
-      <p>IPブロックリストの直接管理や、サーバーデバッグが可能です。</p>
+      <p>システム最高権限モード：すべての投稿およびIPブロックを完全統制しています。</p>
     </div>
 
     <!-- 🟦 ② 教育委員会エリア -->
     <div id="board-zone" class="box hidden">
       <h2>🏛 教育委員会 専用メニュー</h2>
-      <p>ログの監視および、荒らしユーザーのIPブロック権限が有効です。</p>
+      <p>ログのリアルタイム監査、および荒らしユーザーのブラックリスト登録が可能です。</p>
     </div>
 
     <!-- 📂 スレッド選択・追加 -->
     <div class="box">
-      <h3>📂 スレッドの選択 / 新しいスレを追加</h3>
-      <label for="thread-select">現在のスレッド：</label>
+      <h3>📂 スレッドの選択 / 追加</h3>
+      <label for="thread-select" style="font-size: 0.85em; color: #aaa; display: block; margin-bottom: 5px;">現在のスレッド：</label>
       <select id="thread-select" onchange="loadPosts()">
-        <option value="default">雑談スレ（デフォルト）</option>
-        <option value="school">学校・勉強スレ</option>
+        <option value="default">💬 雑談スレ（デフォルト）</option>
+        <option value="school">📖 学校・勉強スレ</option>
       </select>
       
       <div style="display: flex; gap: 10px; margin-top: 10px;">
         <input type="text" id="new-thread-name" placeholder="新しいスレッドのタイトル" style="flex: 1; margin: 0;">
-        <button onclick="addThread()" style="width: auto; margin: 0;">スレを追加</button>
+        <button onclick="addThread()" style="width: auto; margin: 0; background: linear-gradient(45deg, #28a745, #39ff14);">スレを追加</button>
       </div>
     </div>
 
@@ -59,7 +180,7 @@
     <!-- 💬 書き込み一覧表示 -->
     <div class="box">
       <h3>💬 投稿一覧</h3>
-      <div id="post-list">読み込み中...</div>
+      <div id="post-list">データを同期中...</div>
     </div>
   </div>
 
@@ -72,9 +193,8 @@
     const HASH_BOARD = "317c2bc332f74158978184f4f2c00df0b89ebcbf1b802611681a980cf7503fa4"; // 仮: edu-board-pass
     
     let isManager = false; 
-    let userIpAddress = "127.0.0.1"; // デフォルト値
+    let userIpAddress = "127.0.0.1";
 
-    // 🌐 起動時にアクセス者のIPアドレスを調べる（外部サービス利用）
     async function fetchUserIp() {
       try {
         const res = await fetch('https://ipify.org');
@@ -92,7 +212,6 @@
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // 🔑 ログイン
     async function checkAccess() {
       const input = document.getElementById("pass-input").value;
       const errorMsg = document.getElementById("error-msg");
@@ -112,27 +231,25 @@
       }
     }
 
-    // 📂 スレ追加機能（セレクトボックスの選択肢を増やす）
     function addThread() {
       const nameInput = document.getElementById("new-thread-name");
       const title = nameInput.value.trim();
       if (!title) return alert("スレタイを入力してください");
       
       const select = document.getElementById("thread-select");
-      const id = "thread_" + Date.now(); // 被らないIDを自動生成
+      const id = "thread_" + Date.now();
       
       const opt = document.createElement("option");
       opt.value = id;
-      opt.innerText = title;
+      opt.innerText = "💬 " + title;
       select.appendChild(opt);
       
-      select.value = id; // 新しいスレに自動で切り替える
+      select.value = id;
       nameInput.value = "";
       loadPosts();
       alert("新しいスレッドを作成しました！");
     }
 
-    // 📥 投稿データの取得と表示
     async function loadPosts() {
       const currentThread = document.getElementById("thread-select").value;
       
@@ -145,107 +262,30 @@
       if (error) return;
 
       const listDiv = document.getElementById("post-list");
-      listDiv.innerHTML = data.length === 0 ? "<p>まだ投稿はありません。</p>" : "";
+      listDiv.innerHTML = data.length === 0 ? "<p style='color: #aaa; text-align: center; padding: 20px;'>まだ投稿はありません。</p>" : "";
 
       data.forEach((post, index) => {
         const dateStr = new Date(post.created_at).toLocaleString('ja-JP');
         const postDiv = document.createElement("div");
         postDiv.className = "post";
         
-        // 🟥 管理者だけに見えるIP表示と管理ボタン
-        const ipDisplay = isManager ? `<span class="ip-label">[IP: ${post.ip || '不明'}]</span>` : "";
+        const ipDisplay = isManager ? `<span class="ip-label">IP: ${post.ip || '不明'}</span>` : "";
         const adminControls = isManager ? `
-          <button class="admin-btn del-btn" onclick="deletePost(${post.id})">削除</button>
-          <button class="admin-btn block-btn" onclick="blockIp('${post.ip}')">IPブロック</button>
+          <div style="display: inline-block; float: right;">
+            <button class="admin-btn del-btn" onclick="deletePost(${post.id})">削除</button>
+            <button class="admin-btn block-btn" onclick="blockIp('${post.ip}')">IPブロック</button>
+          </div>
         ` : "";
 
         postDiv.innerHTML = `
           ${adminControls}
-          <div class="post-header">${index + 1}: <b>${escapeHtml(post.name)}</b> ${dateStr} ${ipDisplay}</div>
+          <div class="post-header">${index + 1}: <b>${escapeHtml(post.name)}</b> <span>${dateStr}</span> ${ipDisplay}</div>
           <div class="post-content">${escapeHtml(post.content).replace(/\n/g, '<br>')}</div>
         `;
         listDiv.appendChild(postDiv);
       });
     }
 
-    // 📤 書き込み（IP記録、ブロック判定、トリップ機能付き）
     async function submitPost() {
       let nameInput = document.getElementById("user-name").value || "名無しさん";
       const contentInput = document.getElementById("post-content").value;
-      const currentThread = document.getElementById("thread-select").value;
-
-      if (!contentInput.trim()) return alert("本文を入力してください");
-
-      // 🚫 IPブロックのチェック
-      const { data: blockCheck } = await supabase
-        .from('blocked_ips')
-        .select('*')
-        .eq('ip_address', userIpAddress);
-
-      if (blockCheck && blockCheck.length > 0) {
-        alert("あなたのアドレスからの投稿は、管理者によって制限されています。");
-        return;
-      }
-
-      // トリップ処理
-      if (nameInput.includes("#")) {
-        const parts = nameInput.split("#");
-        const hashedKey = await sha256(parts[1]);
-        nameInput = parts[0] + " ◆" + hashedKey.substring(0, 8);
-      }
-
-      // 投稿時にIPアドレスとスレIDを一緒に保存！
-      const { error } = await supabase
-        .from('posts')
-        .insert([{ 
-          name: nameInput, 
-          content: contentInput, 
-          thread_id: currentThread,
-          ip: userIpAddress 
-        }]);
-
-      if (error) {
-        alert("書き込み失敗: " + error.message);
-      } else {
-        document.getElementById("post-content").value = "";
-        loadPosts();
-      }
-    }
-
-    // 🗑 投稿削除
-    async function deletePost(id) {
-      if (!confirm("削除しますか？")) return;
-      await supabase.from('posts').delete().eq('id', id);
-      loadPosts();
-    }
-
-    // 🚫 IPブロック登録機能
-    async function blockIp(ip) {
-      if (!ip || ip === "127.0.0.1") return alert("無効なIPです");
-      if (!confirm("このユーザーのIP [" + ip + "] をブロックリストに登録しますか？")) return;
-
-      const { error } = await supabase
-        .from('blocked_ips')
-        .insert([{ ip_address: ip }]);
-
-      if (error) {
-        alert("すでにブロックされているか、登録に失敗しました");
-      } else {
-        alert("IPブロックが成功しました。このユーザーはもう書き込めません。");
-        loadPosts();
-      }
-    }
-
-    function escapeHtml(str) {
-      if (!str) return "";
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
-    window.onload = async () => {
-      await fetchUserIp(); // IPを取得
-      loadPosts();
-      setInterval(loadPosts, 5000);
-    };
-  </script>
-</body>
-</html>
