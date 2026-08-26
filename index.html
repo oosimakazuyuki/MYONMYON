@@ -6,7 +6,7 @@
   <title>超未来型サイバーポータル掲示板</title>
   <script src="https://jsdelivr.net"></script>
   <style>
-    /* 🌌 全体の背景と文字（近未来ダークグラデーション） */
+    /* 🌌 全体の背景と文字 */
     body { 
       font-family: 'Helvetica Neue', Arial, sans-serif; 
       background: linear-gradient(135deg, #1e1e2f 0%, #111119 100%); 
@@ -21,13 +21,12 @@
     h1 {
       text-align: center;
       color: var(--neon-color, #00fff0);
-      font-size: 2.2em;
       text-shadow: 0 0 15px var(--neon-glow, rgba(0, 255, 240, 0.4));
       margin-bottom: 20px;
       letter-spacing: 2px;
     }
 
-    /* ⏰ サイバーデジタル時計 */
+    /* ⏰ デジタル時計 */
     .clock-box {
       text-align: center;
       font-family: 'Courier New', Courier, monospace;
@@ -61,8 +60,6 @@
       font-size: 1.1em;
     }
     
-    .hidden { display: none; }
-    
     input, textarea, button, select { 
       width: 100%; 
       padding: 12px; 
@@ -91,7 +88,7 @@
     }
     button:hover { transform: translateY(-2px); }
 
-    /* 🎮 ミニゲーム画面 */
+    /* 🎮 ミニゲーム */
     #game-canvas {
       background: #000;
       display: block;
@@ -111,19 +108,8 @@
     .post-header b { color: #fff; }
     .post-content { font-size: 1em; line-height: 1.5; color: #e5e5e7;}
     
-    /* 🎨 カラーテーマボタンの並び */
     .flex-grid { display: flex; gap: 10px; margin-bottom: 10px; }
     .flex-grid button { margin-bottom: 0; }
-
-    /* 🛠 アコーディオン（開閉メモ） */
-    .accordion-content {
-      background: rgba(0,0,0,0.3);
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 0.9em;
-      line-height: 1.6;
-      color: #ccc;
-    }
   </style>
 </head>
 <body>
@@ -134,13 +120,14 @@
 
     <h1>🚀 究極多機能サイバーポータル</h1>
 
-    <!-- 🎨 カラーテーマ -->
+    <!-- 🎨 カラーテーマ（オレンジ復活！） -->
     <div class="box">
       <h3>🎨 カラーテーマ切り替え</h3>
       <div class="flex-grid">
         <button onclick="changeTheme('#00fff0', 'rgba(0,255,240,0.4)')" style="background:#00fff0; color:#000;">シアン</button>
         <button onclick="changeTheme('#ff007f', 'rgba(255,0,127,0.4)')" style="background:#ff007f; color:#fff;">ピンク</button>
         <button onclick="changeTheme('#39ff14', 'rgba(57,255,20,0.4)')" style="background:#39ff14; color:#000;">グリーン</button>
+        <button onclick="changeTheme('#ffaa00', 'rgba(255,170,0,0.4)')" style="background:#ffaa00; color:#000;">オレンジ</button>
       </div>
     </div>
 
@@ -203,48 +190,39 @@
   </div>
 
   <script>
-    // ⏰ 時計の処理
     function updateClock() {
       const now = new Date();
       document.getElementById('digital-clock').innerText = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
     }
     setInterval(updateClock, 1000); updateClock();
 
-    // 🎨 テーマ変更
     function changeTheme(c, g) { 
       document.documentElement.style.setProperty('--neon-color', c); 
       document.documentElement.style.setProperty('--neon-glow', g); 
     }
 
-    // 🎵 1. 効果音プレイヤー
     let audioCtx = null; let oscillator = null;
     function toggleBpmSound(freq) {
       stopSound();
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       oscillator = audioCtx.createOscillator();
       let gainNode = audioCtx.createGain();
-      oscillator.type = 'sine'; 
-      oscillator.frequency.value = freq;
+      oscillator.type = 'sine'; oscillator.frequency.value = freq;
       gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
-      oscillator.connect(gainNode); 
-      gainNode.connect(audioCtx.destination);
+      oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
       oscillator.start();
     }
     function stopSound() { if(oscillator){ oscillator.stop(); oscillator=null; } }
 
-    // 🔐 2. 暗号化ツール
     function runCipher(isEncrypt) {
       const input = document.getElementById('crypto-input').value;
       if(!input) return alert("文字を入力してください");
       const shift = isEncrypt ? 3 : -3;
       let res = "";
-      for(let i=0; i<input.length; i++) {
-        res += String.fromCharCode(input.charCodeAt(i) + shift);
-      }
+      for(let i=0; i<input.length; i++) { res += String.fromCharCode(input.charCodeAt(i) + shift); }
       document.getElementById('crypto-result').innerText = isEncrypt ? `🔒 暗号データ: ${res}` : `🔓 元の文字: ${res}`;
     }
 
-    // ⏱ 3. タイマー＆計算機
     let timerInterval = null; let startTime = 0; let elapsedTime = 0;
     function startTimer() { 
       if(!timerInterval){ 
@@ -267,15 +245,19 @@
         if(!sanitized) return;
         const res = Function(`return (${sanitized})`)(); 
         document.getElementById('calc-result').innerText = `計算結果: ${res}`; 
-      } catch(e){ 
-        document.getElementById('calc-result').innerText = "エラー: 正しい計算式を入力してね"; 
-      } 
+      } catch(e){ document.getElementById('calc-result').innerText = "エラー: 正しい計算式を入力してね"; } 
     }
 
-    // 🎮 スネークゲーム
     const canvas=document.getElementById('game-canvas'); const ctx=canvas.getContext('2d');
     let snake=[{x:10,y:10}]; let food={x:5,y:5}; let dx=1; let dy=0; let gameInterval=null;
     
     function drawGame() {
       const head={x:snake[0].x+dx, y:snake[0].y+dy};
       if(head.x<0||head.x>=20||head.y<0||head.y>=20||snake.some(s=>s.x===head.x&&s.y===head.y)){
+        ctx.fillStyle="red"; ctx.font="20px Arial"; ctx.fillText("GAME OVER",90,150); 
+        clearInterval(gameInterval); gameInterval=null; return;
+      }
+      snake.unshift(head); 
+      if(head.x===food.x&&head.y===food.y){
+        food={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};
+      }else{ snake.pop(); }
