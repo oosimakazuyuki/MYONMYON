@@ -1,24 +1,20 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>超多機能掲示板 (極上デザイン版)</title>
+  <title>超多機能掲示板 (完全復活版)</title>
   <script src="https://jsdelivr.net"></script>
   <style>
-    /* ✨ 全体の背景と文字の色（近未来的なダーク風グラデーション） */
     body { 
       font-family: 'Helvetica Neue', Arial, sans-serif; 
       background: linear-gradient(135deg, #1e1e2f 0%, #111119 100%); 
-      color: #f5f5f7; 
+      color: #f5f5f5; 
       padding: 30px 20px; 
       margin: 0;
       min-height: 100vh;
     }
-    
     .container { max-width: 750px; margin: 0 auto; }
-    
-    /* 🚀 メインタイトル */
     h1 {
       text-align: center;
       color: #00fff0;
@@ -27,8 +23,6 @@
       margin-bottom: 30px;
       letter-spacing: 2px;
     }
-
-    /* 📦 各コンテンツの枠（ネオンの枠線と立体感） */
     .box { 
       background: rgba(30, 30, 45, 0.75); 
       padding: 20px; 
@@ -38,7 +32,6 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(10px);
     }
-    
     .box h3 {
       margin-top: 0;
       color: #00fff0;
@@ -46,10 +39,7 @@
       padding-left: 10px;
       font-size: 1.1em;
     }
-    
     .hidden { display: none; }
-    
-    /* ✍️ 入力欄（フチが光る近未来デザイン） */
     input, textarea, button, select { 
       width: 100%; 
       padding: 12px; 
@@ -67,8 +57,6 @@
       box-shadow: 0 0 8px rgba(0, 255, 240, 0.3);
       outline: none;
     }
-    
-    /* 🔵 メインのボタン（グラデーション＆ホバーで光る） */
     button { 
       background: linear-gradient(45deg, #007bff, #00fff0); 
       color: #111119; 
@@ -83,9 +71,6 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 255, 240, 0.4);
     }
-    button:active { transform: translateY(0); }
-
-    /* 💬 投稿メッセージの枠 */
     .post { 
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.05);
@@ -103,38 +88,22 @@
       gap: 8px;
     }
     .post-header b { color: #fff; font-size: 1.05em; }
-    .post-content { 
-      font-size: 1em; 
-      line-height: 1.5; 
-      color: #e5e5e7;
-    }
-
-    /* 🏷 特殊機能用（トリップやIP） */
+    .post-content { font-size: 1em; line-height: 1.5; color: #e5e5e7;}
     .trip { color: #39ff14; font-weight: bold; text-shadow: 0 0 5px rgba(57, 255, 20, 0.3); }
     .ip-label { background: #dc3545; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
-    
-    /* 🟥 管理画面（赤とピンクの警告ネオンカラー） */
-    #dev-zone { background: rgba(220, 53, 69, 0.1); border-color: #dc3545; box-shadow: 0 0 15px rgba(220, 53, 69, 0.2); }
+    #dev-zone { background: rgba(220, 53, 69, 0.1); border-color: #dc3545; }
     #dev-zone h2 { color: #ff4d5e; margin-top: 0; }
-    #board-zone { background: rgba(0, 123, 255, 0.1); border-color: #007bff; box-shadow: 0 0 15px rgba(0, 123, 255, 0.2); }
+    #board-zone { background: rgba(0, 123, 255, 0.1); border-color: #007bff; }
     #board-zone h2 { color: #3395ff; margin-top: 0; }
-    
-    /* 🗑 管理者ボタン */
     .admin-btn { width: auto; padding: 4px 10px; font-size: 0.8em; margin: 0 0 0 auto; display: inline-block; color: #fff; }
-    .del-btn { background: #dc3545; box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3); }
-    .del-btn:hover { background: #bd2130; }
-    .block-btn { background: #6c757d; box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3); margin-left: 5px; }
-    .block-btn:hover { background: #5a6268; }
-    
-    /* 読み込み中アニメーション風テキスト */
-    #post-list { color: #aaa; }
+    .del-btn { background: #dc3545; }
+    .block-btn { background: #6c757d; margin-left: 5px; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>🚀 自作超多機能掲示板</h1>
 
-    <!-- 🔑 関係者ログイン -->
     <div class="box">
       <h3>🔑 関係者ログイン</h3>
       <input type="password" id="pass-input" placeholder="管理パスワードを入力">
@@ -142,34 +111,28 @@
       <p id="error-msg" style="color: #ff4d5e; font-size: 0.9em; margin: 5px 0 0 0; font-weight: bold;"></p>
     </div>
 
-    <!-- 🟥 ① 自分（開発者）エリア -->
     <div id="dev-zone" class="box hidden">
       <h2>🛠 開発者（自分）専用メニュー</h2>
-      <p>システム最高権限モード：すべての投稿およびIPブロックを完全統制しています。</p>
+      <p>システム最高権限モード：管理機能が有効です。</p>
     </div>
 
-    <!-- 🟦 ② 教育委員会エリア -->
     <div id="board-zone" class="box hidden">
       <h2>🏛 教育委員会 専用メニュー</h2>
-      <p>ログのリアルタイム監査、および荒らしユーザーのブラックリスト登録が可能です。</p>
+      <p>ログのリアルタイム監査が可能です。</p>
     </div>
 
-    <!-- 📂 スレッド選択・追加 -->
     <div class="box">
       <h3>📂 スレッドの選択 / 追加</h3>
-      <label for="thread-select" style="font-size: 0.85em; color: #aaa; display: block; margin-bottom: 5px;">現在のスレッド：</label>
       <select id="thread-select" onchange="loadPosts()">
         <option value="default">💬 雑談スレ（デフォルト）</option>
         <option value="school">📖 学校・勉強スレ</option>
       </select>
-      
       <div style="display: flex; gap: 10px; margin-top: 10px;">
         <input type="text" id="new-thread-name" placeholder="新しいスレッドのタイトル" style="flex: 1; margin: 0;">
         <button onclick="addThread()" style="width: auto; margin: 0; background: linear-gradient(45deg, #28a745, #39ff14);">スレを追加</button>
       </div>
     </div>
 
-    <!-- 📝 新規投稿フォーム -->
     <div class="box">
       <h3>📝 書き込みフォーム (5秒自動同期)</h3>
       <input type="text" id="user-name" placeholder="名前 (例: ユーザー#ひみつ記号)">
@@ -177,7 +140,6 @@
       <button onclick="submitPost()">書き込む</button>
     </div>
 
-    <!-- 💬 書き込み一覧表示 -->
     <div class="box">
       <h3>💬 投稿一覧</h3>
       <div id="post-list">データを同期中...</div>
@@ -189,8 +151,8 @@
     const SUPABASE_KEY = "sb_publishable_xhCqPL4wezjb-o";
     const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const HASH_DEV = "85ea011c206981885699b66bbd24177f022416bc28c0b78d21ff9282362b509d"; // 仮: my-dev-pass
-    const HASH_BOARD = "317c2bc332f74158978184f4f2c00df0b89ebcbf1b802611681a980cf7503fa4"; // 仮: edu-board-pass
+    const HUSH_DEV = "85ea011c206981885699b66bbd24177f022416bc28c0b78d21ff9282362b509d";
+    const HUSH_BOARD = "317c2bc332f74158978184f4f2c00df0b89ebcbf1b802611681a980cf7503fa4";
     
     let isManager = false; 
     let userIpAddress = "127.0.0.1";
@@ -200,9 +162,7 @@
         const res = await fetch('https://ipify.org');
         const data = await res.json();
         userIpAddress = data.ip;
-      } catch (e) {
-        console.error("IPの取得に失敗しました", e);
-      }
+      } catch (e) { console.error(e); }
     }
 
     async function sha256(text) {
@@ -221,9 +181,9 @@
       document.getElementById("board-zone").classList.add("hidden");
       errorMsg.innerText = "";
 
-      if (inputHash === HASH_DEV || inputHash === HASH_BOARD) {
+      if (inputHash === HASH_DEV || inputHash === HUSH_BOARD) {
         isManager = true;
-        document.getElementById(inputHash === HASH_DEV ? "dev-zone" : "board-zone").classList.remove("hidden");
+        document.getElementById(inputHash === HUSH_DEV ? "dev-zone" : "board-zone").classList.remove("hidden");
         alert("管理モードにログインしました");
         loadPosts();
       } else {
@@ -289,3 +249,44 @@
     async function submitPost() {
       let nameInput = document.getElementById("user-name").value || "名無しさん";
       const contentInput = document.getElementById("post-content").value;
+      const currentThread = document.getElementById("thread-select").value;
+
+      if (!contentInput.trim()) return alert("本文を入力してください");
+
+      const { data: blockCheck } = await supabase
+        .from('blocked_ips')
+        .select('*')
+        .eq('ip_address', userIpAddress);
+
+      if (blockCheck && blockCheck.length > 0) {
+        alert("あなたのアドレスからの投稿は制限されています。");
+        return;
+      }
+
+      // ✨ トリップのバグを修正
+      if (nameInput.includes("#")) {
+        const parts = nameInput.split("#");
+        const baseName = parts[0] || "名無しさん";
+        const secretKey = parts[1] || "";
+        const hashedKey = await sha256(secretKey);
+        nameInput = baseName + " ◆" + hashedKey.substring(0, 8);
+      }
+
+      const { error } = await supabase
+        .from('posts')
+        .insert([{ 
+          name: nameInput, 
+          content: contentInput, 
+          thread_id: currentThread,
+          ip: userIpAddress 
+        }]);
+
+      if (error) {
+        alert("書き込み失敗: " + error.message);
+      } else {
+        document.getElementById("post-content").value = "";
+        loadPosts();
+      }
+    }
+
+    async function deletePost(id) {
