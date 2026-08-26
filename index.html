@@ -3,42 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>超多機能掲示板 (iフィルター突破版)</title>
+  <title>究極多機能サイバー掲示板</title>
+  <script src="https://jsdelivr.net"></script>
   <style>
+    /* 🌌 全体の背景と文字（近未来ダークグラデーション） */
     body { 
       font-family: 'Helvetica Neue', Arial, sans-serif; 
       background: linear-gradient(135deg, #1e1e2f 0%, #111119 100%); 
-      color: #f5f5f5; 
+      color: #f5f5f7; 
       padding: 30px 20px; 
       margin: 0;
       min-height: 100vh;
+      transition: background 0.5s ease;
     }
+    
     .container { max-width: 750px; margin: 0 auto; }
+    
     h1 {
       text-align: center;
-      color: #00fff0;
+      color: var(--neon-color, #00fff0);
       font-size: 2.2em;
-      text-shadow: 0 0 15px rgba(0, 255, 240, 0.4);
-      margin-bottom: 30px;
+      text-shadow: 0 0 15px var(--neon-glow, rgba(0, 255, 240, 0.4));
+      margin-bottom: 20px;
       letter-spacing: 2px;
     }
+
+    /* ⏰ サイバーデジタル時計 */
+    .clock-box {
+      text-align: center;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 2.5em;
+      font-weight: bold;
+      color: var(--neon-color, #00fff0);
+      text-shadow: 0 0 10px var(--neon-glow, rgba(0, 255, 240, 0.4));
+      margin-bottom: 25px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--neon-color, rgba(0, 255, 240, 0.2));
+    }
+
+    /* 📦 コンテンツの枠 */
     .box { 
       background: rgba(30, 30, 45, 0.75); 
       padding: 20px; 
       margin-bottom: 20px; 
       border-radius: 12px; 
-      border: 1px solid rgba(0, 255, 240, 0.15);
+      border: 1px solid var(--neon-color, rgba(0, 255, 240, 0.15));
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(10px);
     }
+    
     .box h3 {
       margin-top: 0;
-      color: #00fff0;
-      border-left: 4px solid #00fff0;
+      color: var(--neon-color, #00fff0);
+      border-left: 4px solid var(--neon-color, #00fff0);
       padding-left: 10px;
       font-size: 1.1em;
     }
+    
     .hidden { display: none; }
+    
     input, textarea, button, select { 
       width: 100%; 
       padding: 12px; 
@@ -49,27 +74,33 @@
       color: #fff;
       font-size: 0.95em;
       box-sizing: border-box; 
-      transition: all 0.3s ease;
     }
     input:focus, textarea:focus, select:focus {
-      border-color: #00fff0;
-      box-shadow: 0 0 8px rgba(0, 255, 240, 0.3);
+      border-color: var(--neon-color, #00fff0);
+      box-shadow: 0 0 8px var(--neon-glow, rgba(0, 255, 240, 0.3));
       outline: none;
     }
+    
     button { 
-      background: linear-gradient(45deg, #007bff, #00fff0); 
+      background: linear-gradient(45deg, #007bff, var(--neon-color, #00fff0)); 
       color: #111119; 
       border: none; 
       cursor: pointer; 
       font-weight: bold; 
       font-size: 1em;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 15px rgba(0, 255, 240, 0.2);
+      box-shadow: 0 4px 15px var(--neon-glow, rgba(0, 255, 240, 0.2));
     }
-    button:hover { 
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 255, 240, 0.4);
+    button:hover { transform: translateY(-2px); }
+
+    /* 🎮 隠しゲーム画面 (スネークゲーム) */
+    #game-canvas {
+      background: #000;
+      display: block;
+      margin: 10px auto;
+      border: 2px solid var(--neon-color, #00fff0);
     }
+
+    /* 💬 投稿メッセージ */
     .post { 
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.05);
@@ -77,51 +108,84 @@
       padding: 15px; 
       margin-bottom: 12px;
     }
-    .post-header { 
-      font-size: 0.85em; 
-      color: #aaa; 
-      margin-bottom: 8px; 
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-    }
-    .post-header b { color: #fff; font-size: 1.05em; }
+    .post-header { font-size: 0.85em; color: #aaa; margin-bottom: 8px; }
+    .post-header b { color: #fff; }
     .post-content { font-size: 1em; line-height: 1.5; color: #e5e5e7;}
-    .trip { color: #39ff14; font-weight: bold; text-shadow: 0 0 5px rgba(57, 255, 20, 0.3); }
-    #dev-zone { background: rgba(220, 53, 69, 0.1); border-color: #dc3545; }
-    #dev-zone h2 { color: #ff4d5e; margin-top: 0; }
-    #board-zone { background: rgba(0, 123, 255, 0.1); border-color: #007bff; }
-    #board-zone h2 { color: #3395ff; margin-top: 0; }
-    .admin-btn { width: auto; padding: 4px 10px; font-size: 0.8em; margin: 0 0 0 auto; display: inline-block; color: #fff; }
-    .del-btn { background: #dc3545; }
+    .trip { color: #39ff14; font-weight: bold; }
+    
+    /* 🎨 カラーテーマボタンの並び */
+    .theme-buttons { display: flex; gap: 10px; margin-bottom: 10px; }
+    .theme-btn { padding: 8px; font-size: 0.85em; color: #fff; text-shadow: none; box-shadow: none; }
+
+    /* 🛠 アコーディオン（開閉メモ） */
+    .accordion-content {
+      background: rgba(0,0,0,0.3);
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 0.9em;
+      line-height: 1.6;
+      color: #ccc;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🚀 自作超多機能掲示板</h1>
+    
+    <!-- ⏰ デジタル時計 -->
+    <div class="clock-box" id="digital-clock">00:00:00</div>
+
+    <h1>🚀 究極多機能サイバー掲示板</h1>
+
+    <!-- 🎨 ① カラーチェンジ機能 -->
+    <div class="box">
+      <h3>🎨 カラーテーマ切り替え</h3>
+      <div class="theme-buttons">
+        <button class="theme-btn" style="background: #00fff0; color:#000;" onclick="changeTheme('#00fff0', 'rgba(0,255,240,0.4)')">シアン</button>
+        <button class="theme-btn" style="background: #ff007f;" onclick="changeTheme('#ff007f', 'rgba(255,0,127,0.4)')">ピンク</button>
+        <button class="theme-btn" style="background: #39ff14; color:#000;" onclick="changeTheme('#39ff14', 'rgba(57,255,20,0.4)')">グリーン</button>
+        <button class="theme-btn" style="background: #ffaa00; color:#000;" onclick="changeTheme('#ffaa00', 'rgba(255,170,0,0.4)')">オレンジ</button>
+      </div>
+    </div>
 
     <!-- 🔑 関係者ログイン -->
     <div class="box">
       <h3>🔑 関係者ログイン</h3>
       <input type="password" id="pass-input" placeholder="管理パスワードを入力">
       <button onclick="checkAccess()">ログイン</button>
-      <p id="error-msg" style="color: #ff4d5e; font-size: 0.9em; margin: 5px 0 0 0; font-weight: bold;"></p>
+      <p id="error-msg" style="color: #ff4d5e; font-size: 0.9em; margin: 0; font-weight: bold;"></p>
     </div>
 
-    <!-- 🟥 ① 自分（開発者）エリア -->
-    <div id="dev-zone" class="box hidden">
-      <h2>🛠 開発者（自分）専用メニュー</h2>
-      <p>システム最高権限モード：iフィルター回避通信が安定しています。</p>
+    <!-- 🎮 隠しゲーム機能 -->
+    <div class="box">
+      <h3>🎮 特製ミニゲーム (矢印キーで操作)</h3>
+      <p style="font-size:0.85em; color:#aaa; margin:0 0 10px 0;">緑のドットを食べて体を伸ばそう！壁や自分に当たるとゲームオーバー。</p>
+      <canvas id="game-canvas" width="300" height="300"></canvas>
+      <button onclick="resetGame()" style="margin-top:10px; background:#222; color:#fff; border:1px solid #555;">ゲームリセット</button>
     </div>
 
-    <!-- 🟦 ② 教育委員会エリア -->
-    <div id="board-zone" class="box hidden">
-      <h2>🏛 教育委員会 専用メニュー</h2>
-      <p>Googleの安全なドメインを経由して、安全にログを閲覧しています。</p>
+    <!-- 🎲 運試しダイス・みくじ -->
+    <div class="box">
+      <h3>🎲 サイバー運試し</h3>
+      <div style="display:flex; gap:10px;">
+        <button onclick="rollDice()">🎲 ダイスを振る</button>
+        <button onclick="drawOmikuji()" style="background:linear-gradient(45deg, #purple, #ff007f)">🔮 みくじを引く</button>
+      </div>
+      <p id="roll-result" style="text-align:center; font-weight:bold; color:#fff; margin-top:10px; font-size:1.1em;"></p>
     </div>
 
-    <!-- 📂 スレッド選択・追加 -->
+    <!-- 📋 すり抜け情報・勉強部屋 -->
+    <div class="box">
+      <h3>📋 開発メモ / 特製リンク集</h3>
+      <details>
+        <summary style="cursor:pointer; color:var(--neon-color, #00fff0); font-weight:bold;">📄 メモを開く (カチッとクリック)</summary>
+        <div class="accordion-content">
+          <p><b>【おすすめ裏ルート候補】</b><br>・ユートピア経由<br>・わかめ?tube<br>・Google翻訳プロキシ</p>
+          <p><b>【開発者特権】</b><br>名前欄に「名前#パスワード」を入れると、世界に1つだけの固有トリップ（◆文字列）が自動生成されます。なりすましを完全防止！</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- 📂 スレッド選択 -->
     <div class="box">
       <h3>📂 スレッドの選択 / 追加</h3>
       <select id="thread-select" onchange="loadPosts()">
@@ -130,7 +194,7 @@
       </select>
       <div style="display: flex; gap: 10px; margin-top: 10px;">
         <input type="text" id="new-thread-name" placeholder="新しいスレッドのタイトル" style="flex: 1; margin: 0;">
-        <button onclick="addThread()" style="width: auto; margin: 0; background: linear-gradient(45deg, #28a745, #39ff14);">スレを追加</button>
+        <button onclick="addThread()" style="width: auto; margin: 0;">スレを追加</button>
       </div>
     </div>
 
@@ -142,172 +206,92 @@
       <button onclick="submitPost()">書き込む</button>
     </div>
 
-    <!-- 💬 書き込み一覧表示 -->
+    <!-- 💬 書き込み一覧 -->
     <div class="box">
       <h3>💬 投稿一覧</h3>
       <div id="post-list">データを読み込み中...</div>
     </div>
   </div>
 
-  <!-- 💡 見た目を崩さずに送信するため、隠しiframeを設置 -->
-  <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted){onPostSuccess();}"></iframe>
-
   <script>
-    // 🛡️ iフィルターが絶対にブロックできないGoogleフォームの裏ルート
-    const FORM_ACTION_URL = "https://google.com";
-    const ENTRY_TYPE = "entry.1000001";
-    const ENTRY_NAME = "entry.1000002";
-    const ENTRY_BODY = "entry.1000003";
+    // ⏰ デジタル時計の処理
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('digital-clock').innerText = `${h}:${m}:${s}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 
-    const HASH_DEV = "85ea011c206981885699b66bbd24177f022416bc28c0b78d21ff9282362b509d"; // 仮: my-dev-pass
-    const HASH_BOARD = "317c2bc332f74158978184f4f2c00df0b89ebcbf1b802611681a980cf7503fa4"; // 仮: edu-board-pass
+    // 🎨 テーマカラー変更
+    function changeTheme(color, glow) {
+      document.documentElement.style.setProperty('--neon-color', color);
+      document.documentElement.style.setProperty('--neon-glow', glow);
+    }
+
+    // 🎲 ダイス＆みくじ
+    function rollDice() {
+      const roll = Math.floor(Math.random() * 100) + 1;
+      document.getElementById('roll-result').innerText = `🎲 ダイスの目: ${roll} / 100`;
+    }
+    function drawOmikuji() {
+      const list = ["👑 超大吉 (神)", "✨ 大吉", "👍 中吉", "🎵 吉", "💤 末吉", "💀 大凶"];
+      const res = list[Math.floor(Math.random() * list.length)];
+      document.getElementById('roll-result').innerText = `🔮 運勢: ${res}`;
+    }
+
+    // 🎮 スネークゲームの処理
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    let snake = [{x: 10, y: 10}];
+    let food = {x: 5, y: 5};
+    let dx = 1, dy = 0;
+    let score = 0;
     
-    let isManager = false; 
-    let submitted = false;
-
-    // ローカルストレージを使って仮想データベースとして動かします
-    let localPosts = JSON.parse(localStorage.getItem('chromebook_bbs_posts')) || [
-      { id: 1, name: "システム管理者 ◆Admin777", content: "Googleセキュアルート経由で掲示板が起動しました！iフィルターを回避してサクサク動作します。", thread_id: "default", created_at: new Date().toISOString() }
-    ];
-
-    async function sha256(text) {
-      const msgUint8 = new TextEncoder().encode(text);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    async function checkAccess() {
-      const input = document.getElementById("pass-input").value;
-      const errorMsg = document.getElementById("error-msg");
-      const inputHash = await sha256(input);
-
-      document.getElementById("dev-zone").classList.add("hidden");
-      document.getElementById("board-zone").classList.add("hidden");
-      errorMsg.innerText = "";
-
-      if (inputHash === HASH_DEV || inputHash === HASH_BOARD) {
-        isManager = true;
-        document.getElementById(inputHash === HASH_DEV ? "dev-zone" : "board-zone").classList.remove("hidden");
-        alert("管理モードにログインしました");
-        loadPosts();
+    function gameLoop() {
+      const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+      
+      // 壁衝突または自分に衝突
+      if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20 || snake.some(s => s.x === head.x && s.y === head.y)) {
+        ctx.fillStyle = "red";
+        ctx.font = "20px Arial";
+        ctx.fillText("GAME OVER", 90, 150);
+        return;
+      }
+      
+      snake.unshift(head);
+      if (head.x === food.x && head.y === food.y) {
+        food = {
+          x: Math.floor(Math.random() * 20),
+          y: Math.floor(Math.random() * 20)
+        };
       } else {
-        errorMsg.innerText = "パスワードが正しくありません。";
+        snake.pop();
       }
-    }
-
-    function addThread() {
-      const nameInput = document.getElementById("new-thread-name");
-      const title = nameInput.value.trim();
-      if (!title) return alert("スレタイを入力してください");
       
-      const select = document.getElementById("thread-select");
-      const id = "thread_" + Date.now();
+      ctx.clearRect(0, 0, 300, 300);
+      ctx.fillStyle = "lime";
+      snake.forEach(s => ctx.fillRect(s.x * 15, s.y * 15, 14, 14));
+      ctx.fillStyle = "red";
+      ctx.fillRect(food.x * 15, food.y * 15, 14, 14);
       
-      const opt = document.createElement("option");
-      opt.value = id;
-      opt.innerText = "💬 " + title;
-      select.appendChild(opt);
-      
-      select.value = id;
-      nameInput.value = "";
-      loadPosts();
-      alert("新しいスレッドを作成しました！");
+      setTimeout(gameLoop, 150);
     }
-
-    function loadPosts() {
-      const currentThread = document.getElementById("thread-select").value;
-      const filtered = localPosts.filter(p => p.thread_id === currentThread);
-
-      const listDiv = document.getElementById("post-list");
-      listDiv.innerHTML = filtered.length === 0 ? "<p style='color: #aaa; text-align: center; padding: 20px;'>まだ投稿はありません。</p>" : "";
-
-      filtered.forEach((post, index) => {
-        const dateStr = new Date(post.created_at).toLocaleString('ja-JP');
-        const postDiv = document.createElement("div");
-        postDiv.className = "post";
-        
-        const adminControls = isManager ? `
-          <div style="display: inline-block; float: right;">
-            <button class="admin-btn del-btn" onclick="deletePost(${post.id})">削除</button>
-          </div>
-        ` : "";
-
-        postDiv.innerHTML = `
-          ${adminControls}
-          <div class="post-header">${index + 1}: <b>${escapeHtml(post.name)}</b> <span>${dateStr}</span></div>
-          <div class="post-content">${escapeHtml(post.content).replace(/\n/g, '<br>')}</div>
-        `;
-        listDiv.appendChild(postDiv);
-      });
+    
+    window.addEventListener('keydown', e => {
+      if (e.key === 'ArrowUp' && dy === 0) { dx = 0; dy = -1; }
+      if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = 1; }
+      if (e.key === 'ArrowLeft' && dx === 0) { dx = -1; dy = 0; }
+      if (e.key === 'ArrowRight' && dx === 0) { dx = 1; dy = 0; }
+    });
+    function resetGame() {
+      snake = [{x: 10, y: 10}];
+      dx = 1; dy = 0;
+      food = {x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20)};
     }
+    gameLoop();
 
-    async function submitPost() {
-      let nameInput = document.getElementById("user-name").value || "名無しさん";
-      const contentInput = document.getElementById("post-content").value;
-      const currentThread = document.getElementById("thread-select").value;
-
-      if (!contentInput.trim()) return alert("本文を入力してください");
-
-      if (nameInput.includes("#")) {
-        const parts = nameInput.split("#");
-        const baseName = parts[0] || "名無しさん";
-        const secretKey = parts[1] || "";
-        const hashedKey = await sha256(secretKey);
-        nameInput = baseName + " ◆" + hashedKey.substring(0, 8);
-      }
-
-      // 1. まずローカルの仮想データに追加（見た目を即時更新するため）
-      const newPost = {
-        id: Date.now(),
-        name: nameInput,
-        content: contentInput,
-        thread_id: currentThread,
-        created_at: new Date().toISOString()
-      };
-      localPosts.push(newPost);
-      localStorage.setItem('chromebook_bbs_posts', JSON.stringify(localPosts));
-
-      // 2. Googleフォームを使って裏でデータをこっそり安全に送信！(iフィルターを騙す)
-      const form = document.createElement("form");
-      form.action = FORM_ACTION_URL;
-      form.method = "POST";
-      form.target = "hidden_iframe";
-
-      const createInput = (name, val) => {
-        const inp = document.createElement("input");
-        inp.type = "hidden";
-        inp.name = name;
-        inp.value = val;
-        return inp;
-      };
-
-      form.appendChild(createInput(ENTRY_TYPE, "write_post"));
-
-      // ✨ トリップのバグを修正
-      if (nameInput.includes("#")) {
-        const parts = nameInput.split("#");
-        const baseName = parts[0] || "名無しさん";
-        const secretKey = parts[1] || "";
-        const hashedKey = await sha256(secretKey);
-        nameInput = baseName + " ◆" + hashedKey.substring(0, 8);
-      }
-
-      const { error } = await supabase
-        .from('posts')
-        .insert([{ 
-          name: nameInput, 
-          content: contentInput, 
-          thread_id: currentThread,
-          ip: userIpAddress 
-        }]);
-
-      if (error) {
-        alert("書き込み失敗: " + error.message);
-      } else {
-        document.getElementById("post-content").value = "";
-        loadPosts();
-      }
-    }
-
-    async function deletePost(id) {
+    // 🔗 Supabase設定
+    const SUPABASE_URL = "https://supabase.co";
