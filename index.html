@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>超未来型サイバーポータル掲示板</title>
-  <script src="https://jsdelivr.net"></script>
   <style>
     /* 🌌 全体の背景と文字 */
     body { 
@@ -88,14 +87,6 @@
     }
     button:hover { transform: translateY(-2px); }
 
-    /* 🎮 ミニゲーム */
-    #game-canvas {
-      background: #000;
-      display: block;
-      margin: 10px auto;
-      border: 2px solid var(--neon-color, #00fff0);
-    }
-
     /* 💬 投稿メッセージ */
     .post { 
       background: rgba(255, 255, 255, 0.03);
@@ -120,7 +111,7 @@
 
     <h1>🚀 究極多機能サイバーポータル</h1>
 
-    <!-- 🎨 カラーテーマ（オレンジ復活！） -->
+    <!-- 🎨 カラーテーマ -->
     <div class="box">
       <h3>🎨 カラーテーマ切り替え</h3>
       <div class="flex-grid">
@@ -131,7 +122,7 @@
       </div>
     </div>
 
-    <!-- 🎵 1. サイバーBGM・効果音 -->
+    <!-- 🎵 1. サイバー効果音 -->
     <div class="box">
       <h3>🎵 サイバー効果音</h3>
       <div class="flex-grid">
@@ -167,13 +158,6 @@
       <p id="calc-result" style="font-weight:bold; color:#00fff0; margin:5px 0 0 0;"></p>
     </div>
 
-    <!-- 🎮 ミニゲーム -->
-    <div class="box">
-      <h3>🎮 特製ミニゲーム (スネーク)</h3>
-      <canvas id="game-canvas" width="300" height="300"></canvas>
-      <button onclick="resetGame()" style="background:#222; color:#fff; border:1px solid #555;">ゲームリセット</button>
-    </div>
-
     <!-- 🤖 疑似AI自動返信掲示板 -->
     <div class="box">
       <h3>💬 2ch風 疑似AI自動返信掲示板</h3>
@@ -190,17 +174,20 @@
   </div>
 
   <script>
+    // ⏰ 時計
     function updateClock() {
       const now = new Date();
       document.getElementById('digital-clock').innerText = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
     }
     setInterval(updateClock, 1000); updateClock();
 
+    // 🎨 テーマ変更
     function changeTheme(c, g) { 
       document.documentElement.style.setProperty('--neon-color', c); 
       document.documentElement.style.setProperty('--neon-glow', g); 
     }
 
+    // 🎵 1. 効果音プレイヤー
     let audioCtx = null; let oscillator = null;
     function toggleBpmSound(freq) {
       stopSound();
@@ -214,6 +201,7 @@
     }
     function stopSound() { if(oscillator){ oscillator.stop(); oscillator=null; } }
 
+    // 🔐 2. 暗号化ツール
     function runCipher(isEncrypt) {
       const input = document.getElementById('crypto-input').value;
       if(!input) return alert("文字を入力してください");
@@ -223,6 +211,7 @@
       document.getElementById('crypto-result').innerText = isEncrypt ? `🔒 暗号データ: ${res}` : `🔓 元の文字: ${res}`;
     }
 
+    // ⏱ 3. タイマー＆計算機
     let timerInterval = null; let startTime = 0; let elapsedTime = 0;
     function startTimer() { 
       if(!timerInterval){ 
@@ -248,16 +237,31 @@
       } catch(e){ document.getElementById('calc-result').innerText = "エラー: 正しい計算式を入力してね"; } 
     }
 
-    const canvas=document.getElementById('game-canvas'); const ctx=canvas.getContext('2d');
-    let snake=[{x:10,y:10}]; let food={x:5,y:5}; let dx=1; let dy=0; let gameInterval=null;
-    
-    function drawGame() {
-      const head={x:snake[0].x+dx, y:snake[0].y+dy};
-      if(head.x<0||head.x>=20||head.y<0||head.y>=20||snake.some(s=>s.x===head.x&&s.y===head.y)){
-        ctx.fillStyle="red"; ctx.font="20px Arial"; ctx.fillText("GAME OVER",90,150); 
-        clearInterval(gameInterval); gameInterval=null; return;
-      }
-      snake.unshift(head); 
-      if(head.x===food.x&&head.y===food.y){
-        food={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};
-      }else{ snake.pop(); }
+    // 🤖 疑似AI自動返信掲示板のデータ
+    let virtualPosts = [
+      { name: "名無しさん", content: "ここが新しい自作スレか。うまいことiフィルター回避できてるなｗｗ", date: "2026/08/26 17:00:00" },
+      { name: "名無しさん", content: "お、主（開発者）ログインした？時計もあって草", date: "2026/08/26 17:02:00" }
+    ];
+
+    const aiResponses = [
+      "うはｗｗｗｗ主それマジ？ｗｗｗｗ",
+      ">>1 乙。このChromebookハック掲示板、天才すぎて草生えるわ",
+      "お前それ教育委員会に見つかったら一発で廊下立たされるやつだろｗｗｗ",
+      "これ避難所としては優秀だな。iフィルター涙目でワロタ",
+      "オレンジテーマにするとなんか夕方の秘密基地っぽくてエモいぞ",
+      "なんJ民の溜まり場はここですか？"
+    ];
+
+    function renderVirtualPosts() {
+      const listDiv = document.getElementById('post-list');
+      listDiv.innerHTML = "";
+      virtualPosts.forEach((post, i) => {
+        const postDiv = document.createElement('div'); postDiv.className = 'post';
+        postDiv.innerHTML = `<div class="post-header">${i+1}: <b>${escapeHtml(post.name)}</b> ${post.date}</div><div class="post-content">${escapeHtml(post.content)}</div>`;
+        listDiv.appendChild(postDiv);
+      });
+    }
+
+    function submitVirtualPost() {
+      const name = document.getElementById('user-name').value || "名無しさん(主)";
+      const content = document.getElementById('post-content').value;
