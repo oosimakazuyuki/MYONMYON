@@ -3,103 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>超未来型サイバーポータル掲示板</title>
+  <title>サイバーネオン掲示板 (軽量版)</title>
   <style>
     /* 🌌 全体の背景と文字 */
     body { 
-      font-family: 'Helvetica Neue', Arial, sans-serif; 
+      font-family: sans-serif; 
       background: linear-gradient(135deg, #1e1e2f 0%, #111119 100%); 
       color: #f5f5f7; 
-      padding: 30px 20px; 
+      padding: 20px; 
       margin: 0;
-      min-height: 100vh;
     }
-    
-    .container { max-width: 750px; margin: 0 auto; }
-    
-    h1 {
-      text-align: center;
-      color: var(--neon-color, #00fff0);
-      text-shadow: 0 0 15px var(--neon-glow, rgba(0, 255, 240, 0.4));
-      margin-bottom: 20px;
-      letter-spacing: 2px;
-    }
+    .container { max-width: 600px; margin: 0 auto; }
+    h1 { text-align: center; color: var(--neon-color, #00fff0); text-shadow: 0 0 10px var(--neon-glow, rgba(0, 255, 240, 0.4)); }
 
     /* ⏰ デジタル時計 */
     .clock-box {
-      text-align: center;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 2.5em;
-      font-weight: bold;
-      color: var(--neon-color, #00fff0);
-      text-shadow: 0 0 10px var(--neon-glow, rgba(0, 255, 240, 0.4));
-      margin-bottom: 25px;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 10px;
-      border-radius: 8px;
+      text-align: center; font-family: monospace; font-size: 2.2em; font-weight: bold;
+      color: var(--neon-color, #00fff0); text-shadow: 0 0 10px var(--neon-glow, rgba(0, 255, 240, 0.4));
+      margin-bottom: 20px; background: rgba(0, 0, 0, 0.4); padding: 10px; border-radius: 8px;
       border: 1px solid var(--neon-color, rgba(0, 255, 240, 0.2));
     }
 
     /* 📦 コンテンツの枠 */
     .box { 
-      background: rgba(30, 30, 45, 0.75); 
-      padding: 20px; 
-      margin-bottom: 20px; 
-      border-radius: 12px; 
+      background: rgba(30, 30, 45, 0.8); padding: 15px; margin-bottom: 15px; border-radius: 12px; 
       border: 1px solid var(--neon-color, rgba(0, 255, 240, 0.15));
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
     }
-    
-    .box h3 {
-      margin-top: 0;
-      color: var(--neon-color, #00fff0);
-      border-left: 4px solid var(--neon-color, #00fff0);
-      padding-left: 10px;
-      font-size: 1.1em;
+    input, textarea, button { 
+      width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(15, 15, 25, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 6px; color: #fff; box-sizing: border-box; 
     }
-    
-    input, textarea, button, select { 
-      width: 100%; 
-      padding: 12px; 
-      margin-bottom: 12px; 
-      background: rgba(15, 15, 25, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 6px; 
-      color: #fff;
-      font-size: 0.95em;
-      box-sizing: border-box; 
-    }
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--neon-color, #00fff0);
-      box-shadow: 0 0 8px var(--neon-glow, rgba(0, 255, 240, 0.3));
-      outline: none;
-    }
-    
     button { 
-      background: linear-gradient(45deg, #007bff, var(--neon-color, #00fff0)); 
-      color: #111119; 
-      border: none; 
-      cursor: pointer; 
-      font-weight: bold; 
-      font-size: 1em;
-      box-shadow: 0 4px 15px var(--neon-glow, rgba(0, 255, 240, 0.2));
+      background: linear-gradient(45deg, #007bff, var(--neon-color, #00fff0)); color: #111119; font-weight: bold; cursor: pointer;
     }
-    button:hover { transform: translateY(-2px); }
-
-    /* 💬 投稿メッセージ */
-    .post { 
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      padding: 15px; 
-      margin-bottom: 12px;
-    }
-    .post-header { font-size: 0.85em; color: #aaa; margin-bottom: 8px; }
-    .post-header b { color: #fff; }
-    .post-content { font-size: 1em; line-height: 1.5; color: #e5e5e7;}
-    
-    .flex-grid { display: flex; gap: 10px; margin-bottom: 10px; }
+    .post { background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+    .post-header { font-size: 0.85em; color: #aaa; margin-bottom: 5px; }
+    .flex-grid { display: flex; gap: 10px; }
     .flex-grid button { margin-bottom: 0; }
   </style>
 </head>
@@ -109,11 +48,11 @@
     <!-- ⏰ デジタル時計 -->
     <div class="clock-box" id="digital-clock">00:00:00</div>
 
-    <h1>🚀 究極多機能サイバーポータル</h1>
+    <h1>🚀 多機能サイバー掲示板</h1>
 
-    <!-- 🎨 カラーテーマ -->
+    <!-- 🎨 大好きなオレンジもあるカラーテーマ -->
     <div class="box">
-      <h3>🎨 カラーテーマ切り替え</h3>
+      <h3 style="margin-top:0;">🎨 カラー切り替え</h3>
       <div class="flex-grid">
         <button onclick="changeTheme('#00fff0', 'rgba(0,255,240,0.4)')" style="background:#00fff0; color:#000;">シアン</button>
         <button onclick="changeTheme('#ff007f', 'rgba(255,0,127,0.4)')" style="background:#ff007f; color:#fff;">ピンク</button>
@@ -122,59 +61,22 @@
       </div>
     </div>
 
-    <!-- 🎵 1. サイバー効果音 -->
-    <div class="box">
-      <h3>🎵 サイバー効果音</h3>
-      <div class="flex-grid">
-        <button onclick="toggleBpmSound(880)">🔊 警告音</button>
-        <button onclick="toggleBpmSound(440)">🎵 ピコピコ音</button>
-        <button onclick="stopSound()" style="background:#dc3545; color:#fff;">📴 音を止める</button>
-      </div>
-    </div>
-
-    <!-- 🔐 2. 暗号化・復号化ツール -->
-    <div class="box">
-      <h3>🔐 秘密の暗号化ツール</h3>
-      <input type="text" id="crypto-input" placeholder="暗号化・復号化したい文字を入力">
-      <div class="flex-grid">
-        <button onclick="runCipher(true)">🔒 暗号化</button>
-        <button onclick="runCipher(false)" style="background:#6c757d;">🔓 元に戻す</button>
-      </div>
-      <p id="crypto-result" style="background:rgba(0,0,0,0.3); padding:10px; border-radius:6px; font-family:monospace; color:#39ff14; word-break:break-all; min-height: 20px; margin-top: 10px;"></p>
-    </div>
-
-    <!-- ⏱ 3. 記録用タイマー＆簡易計算機 -->
-    <div class="box">
-      <h3>⏱ ストップウォッチ ＆ 爆速計算</h3>
-      <div style="text-align:center; font-size:1.8em; font-family:monospace; margin-bottom:10px; color:#fff;" id="timer-display">00:00.00</div>
-      <div class="flex-grid" style="margin-bottom:15px;">
-        <button onclick="startTimer()">▶ スタート</button>
-        <button onclick="stopTimer()" style="background:#ffaa00;">⏸ ストップ</button>
-        <button onclick="resetTimer()" style="background:#6c757d;">🔄 リセット</button>
-      </div>
-      
-      <input type="text" id="calc-input" placeholder="数式を入力 (例: 123 + 456 * 2)">
-      <button onclick="runCalc()">🧮 計算する</button>
-      <p id="calc-result" style="font-weight:bold; color:#00fff0; margin:5px 0 0 0;"></p>
-    </div>
-
     <!-- 🤖 疑似AI自動返信掲示板 -->
     <div class="box">
-      <h3>💬 2ch風 疑似AI自動返信掲示板</h3>
-      <p style="font-size:0.8em; color:#aaa; margin:0 0 10px 0;">書き込むと、1秒後になんJ民（AI）たちが自動でレスをくれます！</p>
+      <h3 style="margin-top:0;">📝 書き込み (なんJ民AI連動)</h3>
       <input type="text" id="user-name" placeholder="名前">
       <textarea id="post-content" rows="3" placeholder="本文を入力して書き込んでね"></textarea>
-      <button onclick="submitVirtualPost()">書き込む (疑似AI連動)</button>
+      <button onclick="submitVirtualPost()">書き込む</button>
     </div>
 
     <div class="box">
-      <h3>💬 投稿一覧</h3>
+      <h3 style="margin-top:0;">💬 投稿一覧</h3>
       <div id="post-list"></div>
     </div>
   </div>
 
   <script>
-    // ⏰ 時計
+    // ⏰ 時計の処理
     function updateClock() {
       const now = new Date();
       document.getElementById('digital-clock').innerText = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
@@ -187,69 +89,17 @@
       document.documentElement.style.setProperty('--neon-glow', g); 
     }
 
-    // 🎵 1. 効果音プレイヤー
-    let audioCtx = null; let oscillator = null;
-    function toggleBpmSound(freq) {
-      stopSound();
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      oscillator = audioCtx.createOscillator();
-      let gainNode = audioCtx.createGain();
-      oscillator.type = 'sine'; oscillator.frequency.value = freq;
-      gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
-      oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
-      oscillator.start();
-    }
-    function stopSound() { if(oscillator){ oscillator.stop(); oscillator=null; } }
-
-    // 🔐 2. 暗号化ツール
-    function runCipher(isEncrypt) {
-      const input = document.getElementById('crypto-input').value;
-      if(!input) return alert("文字を入力してください");
-      const shift = isEncrypt ? 3 : -3;
-      let res = "";
-      for(let i=0; i<input.length; i++) { res += String.fromCharCode(input.charCodeAt(i) + shift); }
-      document.getElementById('crypto-result').innerText = isEncrypt ? `🔒 暗号データ: ${res}` : `🔓 元の文字: ${res}`;
-    }
-
-    // ⏱ 3. タイマー＆計算機
-    let timerInterval = null; let startTime = 0; let elapsedTime = 0;
-    function startTimer() { 
-      if(!timerInterval){ 
-        startTime = Date.now() - elapsedTime; 
-        timerInterval = setInterval(()=>{ 
-          elapsedTime = Date.now() - startTime; 
-          const m=String(Math.floor(elapsedTime/60000)).padStart(2,'0'); 
-          const s=String(Math.floor((elapsedTime%60000)/1000)).padStart(2,'0'); 
-          const ms=String(Math.floor((elapsedTime%1000)/10)).padStart(2,'0'); 
-          document.getElementById('timer-display').innerText=`${m}:${s}.${ms}`; 
-        },10);
-      }
-    }
-    function stopTimer() { clearInterval(timerInterval); timerInterval=null; }
-    function resetTimer() { stopTimer(); elapsedTime=0; document.getElementById('timer-display').innerText="00:00.00"; }
-    
-    function runCalc() { 
-      try { 
-        const sanitized = document.getElementById('calc-input').value;
-        if(!sanitized) return;
-        const res = Function(`return (${sanitized})`)(); 
-        document.getElementById('calc-result').innerText = `計算結果: ${res}`; 
-      } catch(e){ document.getElementById('calc-result').innerText = "エラー: 正しい計算式を入力してね"; } 
-    }
-
-    // 🤖 疑似AI自動返信掲示板のデータ
+    // 🤖 なんJ民のデータ
     let virtualPosts = [
-      { name: "名無しさん", content: "ここが新しい自作スレか。うまいことiフィルター回避できてるなｗｗ", date: "2026/08/26 17:00:00" },
-      { name: "名無しさん", content: "お、主（開発者）ログインした？時計もあって草", date: "2026/08/26 17:02:00" }
+      { name: "名無しさん", content: "ここが新しい自作スレか。うまいことiフィルター回避できてるなｗｗ", date: "17:00:00" }
     ];
 
     const aiResponses = [
       "うはｗｗｗｗ主それマジ？ｗｗｗｗ",
-      ">>1 乙。このChromebookハック掲示板、天才すぎて草生えるわ",
-      "お前それ教育委員会に見つかったら一発で廊下立たされるやつだろｗｗｗ",
-      "これ避難所としては優秀だな。iフィルター涙目でワロタ",
-      "オレンジテーマにするとなんか夕方の秘密基地っぽくてエモいぞ",
-      "なんJ民の溜まり場はここですか？"
+      ">>1 乙。この掲示板、天才すぎて草生えるわ",
+      "お前それ教育委員会に見つかったら廊下立たされるやつだろｗｗｗ",
+      "オレンジテーマにすると秘密基地っぽくてエモいぞ！",
+      "いいぞもっとやれ。次は何の機能追加するんだ？"
     ];
 
     function renderVirtualPosts() {
@@ -257,7 +107,7 @@
       listDiv.innerHTML = "";
       virtualPosts.forEach((post, i) => {
         const postDiv = document.createElement('div'); postDiv.className = 'post';
-        postDiv.innerHTML = `<div class="post-header">${i+1}: <b>${escapeHtml(post.name)}</b> ${post.date}</div><div class="post-content">${escapeHtml(post.content)}</div>`;
+        postDiv.innerHTML = `<div class="post-header">${i+1}: <b>${escapeHtml(post.name)}</b> ${post.date}</div><div>${escapeHtml(post.content)}</div>`;
         listDiv.appendChild(postDiv);
       });
     }
@@ -265,3 +115,22 @@
     function submitVirtualPost() {
       const name = document.getElementById('user-name').value || "名無しさん(主)";
       const content = document.getElementById('post-content').value;
+      if(!content.trim()) return alert("本文を入れてね");
+
+      const nowStr = new Date().toLocaleTimeString('ja-JP');
+      virtualPosts.push({ name: name, content: content, date: nowStr });
+      document.getElementById('post-content').value = "";
+      renderVirtualPosts();
+
+      setTimeout(() => {
+        const randomReply = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+        virtualPosts.push({ name: "名無しさん", content: randomReply, date: new Date().toLocaleTimeString('ja-JP') });
+        renderVirtualPosts();
+      }, 1000);
+    }
+
+    function escapeHtml(str) { if (!str) return ""; return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    renderVirtualPosts();
+  </script>
+</body>
+</html>
