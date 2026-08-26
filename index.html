@@ -3,56 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>サイバーネオン掲示板 (軽量版)</title>
+  <title>超多機能掲示板 (スレ立て・IP管理版)</title>
+  <!-- 💡 Supabaseと通信するための公式スクリプト -->
+  <script src="https://jsdelivr.net"></script>
   <style>
-    /* 🌌 全体の背景と文字 */
+    /* 🌌 大好評のサイバーネオンダークデザイン */
     body { 
-      font-family: sans-serif; 
+      font-family: 'Helvetica Neue', Arial, sans-serif; 
       background: linear-gradient(135deg, #1e1e2f 0%, #111119 100%); 
       color: #f5f5f7; 
-      padding: 20px; 
+      padding: 30px 20px; 
       margin: 0;
+      min-height: 100vh;
     }
-    .container { max-width: 600px; margin: 0 auto; }
-    h1 { text-align: center; color: var(--neon-color, #00fff0); text-shadow: 0 0 10px var(--neon-glow, rgba(0, 255, 240, 0.4)); }
-
-    /* ⏰ デジタル時計 */
-    .clock-box {
-      text-align: center; font-family: monospace; font-size: 2.2em; font-weight: bold;
-      color: var(--neon-color, #00fff0); text-shadow: 0 0 10px var(--neon-glow, rgba(0, 255, 240, 0.4));
-      margin-bottom: 20px; background: rgba(0, 0, 0, 0.4); padding: 10px; border-radius: 8px;
-      border: 1px solid var(--neon-color, rgba(0, 255, 240, 0.2));
+    .container { max-width: 750px; margin: 0 auto; }
+    h1 {
+      text-align: center;
+      color: var(--neon-color, #00fff0);
+      font-size: 2.2em;
+      text-shadow: 0 0 15px var(--neon-glow, rgba(0, 255, 240, 0.4));
+      margin-bottom: 30px;
+      letter-spacing: 2px;
     }
-
-    /* 📦 コンテンツの枠 */
     .box { 
-      background: rgba(30, 30, 45, 0.8); padding: 15px; margin-bottom: 15px; border-radius: 12px; 
+      background: rgba(30, 30, 45, 0.75); 
+      padding: 20px; 
+      margin-bottom: 20px; 
+      border-radius: 12px; 
       border: 1px solid var(--neon-color, rgba(0, 255, 240, 0.15));
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
     }
-    input, textarea, button { 
-      width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(15, 15, 25, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 6px; color: #fff; box-sizing: border-box; 
+    .box h3 {
+      margin-top: 0;
+      color: var(--neon-color, #00fff0);
+      border-left: 4px solid var(--neon-color, #00fff0);
+      padding-left: 10px;
+      font-size: 1.1em;
+    }
+    .hidden { display: none; }
+    input, textarea, button, select { 
+      width: 100%; padding: 12px; margin-bottom: 12px; 
+      background: rgba(15, 15, 25, 0.8); border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px; color: #fff; font-size: 0.95em; box-sizing: border-box; 
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--neon-color, #00fff0);
+      box-shadow: 0 0 8px var(--neon-glow, rgba(0, 255, 240, 0.3));
+      outline: none;
     }
     button { 
-      background: linear-gradient(45deg, #007bff, var(--neon-color, #00fff0)); color: #111119; font-weight: bold; cursor: pointer;
+      background: linear-gradient(45deg, #007bff, var(--neon-color, #00fff0)); 
+      color: #111119; border: none; cursor: pointer; font-weight: bold; 
+      font-size: 1em; box-shadow: 0 4px 15px var(--neon-glow, rgba(0, 255, 240, 0.2));
     }
-    .post { background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
-    .post-header { font-size: 0.85em; color: #aaa; margin-bottom: 5px; }
-    .flex-grid { display: flex; gap: 10px; }
+    button:hover { transform: translateY(-2px); }
+    .post { 
+      background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px; padding: 15px; margin-bottom: 12px; 
+    }
+    .post-header { 
+      font-size: 0.85em; color: #aaa; margin-bottom: 8px; 
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    }
+    .post-header b { color: #fff; font-size: 1.05em; }
+    .post-content { font-size: 1em; line-height: 1.5; color: #e5e5e7;}
+    .trip { color: #39ff14; font-weight: bold; text-shadow: 0 0 5px rgba(57, 255, 20, 0.3); }
+    .ip-label { background: #dc3545; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+    #dev-zone { background: rgba(220, 53, 69, 0.1); border-color: #dc3545; }
+    #dev-zone h2 { color: #ff4d5e; margin-top: 0; }
+    #board-zone { background: rgba(0, 123, 255, 0.1); border-color: #007bff; }
+    #board-zone h2 { color: #3395ff; margin-top: 0; }
+    .admin-btn { width: auto; padding: 4px 10px; font-size: 0.8em; margin: 0 0 0 auto; display: inline-block; color: #fff; }
+    .del-btn { background: #dc3545; }
+    .block-btn { background: #6c757d; margin-left: 5px; }
+    .flex-grid { display: flex; gap: 10px; margin-bottom: 10px; }
     .flex-grid button { margin-bottom: 0; }
   </style>
 </head>
 <body>
   <div class="container">
-    
-    <!-- ⏰ デジタル時計 -->
-    <div class="clock-box" id="digital-clock">00:00:00</div>
+    <h1>🚀 特製多機能掲示板</h1>
 
-    <h1>🚀 多機能サイバー掲示板</h1>
-
-    <!-- 🎨 大好きなオレンジもあるカラーテーマ -->
+    <!-- 🎨 4色カラーテーマ（オレンジあり） -->
     <div class="box">
-      <h3 style="margin-top:0;">🎨 カラー切り替え</h3>
+      <h3>🎨 カラーテーマ切り替え</h3>
       <div class="flex-grid">
         <button onclick="changeTheme('#00fff0', 'rgba(0,255,240,0.4)')" style="background:#00fff0; color:#000;">シアン</button>
         <button onclick="changeTheme('#ff007f', 'rgba(255,0,127,0.4)')" style="background:#ff007f; color:#fff;">ピンク</button>
@@ -61,27 +96,102 @@
       </div>
     </div>
 
-    <!-- 🤖 疑似AI自動返信掲示板 -->
+    <!-- 🔑 関係者ログイン -->
     <div class="box">
-      <h3 style="margin-top:0;">📝 書き込み (なんJ民AI連動)</h3>
-      <input type="text" id="user-name" placeholder="名前">
-      <textarea id="post-content" rows="3" placeholder="本文を入力して書き込んでね"></textarea>
-      <button onclick="submitVirtualPost()">書き込む</button>
+      <h3>🔑 関係者ログイン</h3>
+      <input type="password" id="pass-input" placeholder="管理パスワードを入力">
+      <button onclick="checkAccess()">ログイン</button>
+      <p id="error-msg" style="color: #ff4d5e; font-size: 0.9em; margin: 5px 0 0 0; font-weight: bold;"></p>
     </div>
 
+    <!-- 🟥 ① 自分（開発者）エリア -->
+    <div id="dev-zone" class="box hidden">
+      <h2>🛠 開発者（自分）専用メニュー</h2>
+      <p>システム最高権限モード：荒らしIPの確認と即時ブラックリスト登録が可能です。</p>
+    </div>
+
+    <!-- 🟦 ② 教育委員会エリア -->
+    <div id="board-zone" class="box hidden">
+      <h2>🏛 教育委員会 専用メニュー</h2>
+      <p>全書き込みのリアルタイム監査、および問題のある投稿の削除権限が有効です。</p>
+    </div>
+
+    <!-- 📂 スレッド選択・追加 -->
     <div class="box">
-      <h3 style="margin-top:0;">💬 投稿一覧</h3>
-      <div id="post-list"></div>
+      <h3>📂 スレッドの選択 / 追加</h3>
+      <select id="thread-select" onchange="loadPosts()">
+        <option value="default">💬 雑談スレ（デフォルト）</option>
+        <option value="school">📖 学校・勉強スレ</option>
+      </select>
+      <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <input type="text" id="new-thread-name" placeholder="新しいスレッドのタイトル" style="flex: 1; margin: 0;">
+        <button onclick="addThread()" style="width: auto; margin: 0; background: linear-gradient(45deg, #28a745, #39ff14);">スレを追加</button>
+      </div>
+    </div>
+
+    <!-- 📝 新規投稿フォーム -->
+    <div class="box">
+      <h3>📝 書き込みフォーム (5秒自動同期)</h3>
+      <input type="text" id="user-name" placeholder="名前 (例: ユーザー#ひみつ記号)">
+      <textarea id="post-content" rows="4" placeholder="本文を入力してください"></textarea>
+      <button onclick="submitPost()">書き込む</button>
+    </div>
+
+    <!-- 💬 書き込み一覧表示 -->
+    <div class="box">
+      <h3>💬 投稿一覧</h3>
+      <div id="post-list">データを同期中...</div>
     </div>
   </div>
 
   <script>
-    // ⏰ 時計の処理
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('digital-clock').innerText = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+    // 🔗 あなたのSupabase接続設定
+    const SUPABASE_URL = "https://supabase.co";
+    const SUPABASE_KEY = "sb_publishable_xhCqPL4wezjb-o";
+    const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // 🔑 関係者パスワードの暗号ハッシュ（中身：my-dev-pass / edu-board-pass）
+    const HASH_DEV = "85ea011c206981885699b66bbd24177f022416bc28c0b78d21ff9282362b509d";
+    const HASH_BOARD = "317c2bc332f74158978184f4f2c00df0b89ebcbf1b802611681a980cf7503fa4";
+    
+    let isManager = false; 
+    let userIpAddress = "127.0.0.1";
+
+    // 🌐 起動時にアクセス者のIPアドレスを自動取得
+    async function fetchUserIp() {
+      try {
+        const res = await fetch('https://ipify.org');
+        const data = await res.json();
+        userIpAddress = data.ip;
+      } catch (e) { console.error(e); }
     }
-    setInterval(updateClock, 1000); updateClock();
+
+    async function sha256(text) {
+      const msgUint8 = new TextEncoder().encode(text);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // 🔑 ログイン判定
+    async function checkAccess() {
+      const input = document.getElementById("pass-input").value;
+      const errorMsg = document.getElementById("error-msg");
+      const inputHash = await sha256(input);
+
+      document.getElementById("dev-zone").classList.add("hidden");
+      document.getElementById("board-zone").classList.add("hidden");
+      errorMsg.innerText = "";
+
+      if (inputHash === HASH_DEV || inputHash === HASH_BOARD) {
+        isManager = true;
+        document.getElementById(inputHash === HASH_DEV ? "dev-zone" : "board-zone").classList.remove("hidden");
+        alert("管理モードにログインしました");
+        loadPosts();
+      } else {
+        errorMsg.innerText = "パスワードが正しくありません。";
+      }
+    }
 
     // 🎨 テーマ変更
     function changeTheme(c, g) { 
@@ -89,48 +199,59 @@
       document.documentElement.style.setProperty('--neon-glow', g); 
     }
 
-    // 🤖 なんJ民のデータ
-    let virtualPosts = [
-      { name: "名無しさん", content: "ここが新しい自作スレか。うまいことiフィルター回避できてるなｗｗ", date: "17:00:00" }
-    ];
+    // 📂 スレ追加機能
+    function addThread() {
+      const nameInput = document.getElementById("new-thread-name");
+      const title = nameInput.value.trim();
+      if (!title) return alert("スレタイを入力してください");
+      
+      const select = document.getElementById("thread-select");
+      const id = "thread_" + Date.now();
+      
+      const opt = document.createElement("option");
+      opt.value = id;
+      opt.innerText = "💬 " + title;
+      select.appendChild(opt);
+      
+      select.value = id;
+      nameInput.value = "";
+      loadPosts();
+      alert("新しいスレッドを作成しました！");
+    }
 
-    const aiResponses = [
-      "うはｗｗｗｗ主それマジ？ｗｗｗｗ",
-      ">>1 乙。この掲示板、天才すぎて草生えるわ",
-      "お前それ教育委員会に見つかったら廊下立たされるやつだろｗｗｗ",
-      "オレンジテーマにすると秘密基地っぽくてエモいぞ！",
-      "いいぞもっとやれ。次は何の機能追加するんだ？"
-    ];
+    // 📥 データを読み込んで表示する関数
+    async function loadPosts() {
+      const currentThread = document.getElementById("thread-select").value;
+      
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('thread_id', currentThread)
+        .order('created_at', { ascending: true });
 
-    function renderVirtualPosts() {
-      const listDiv = document.getElementById('post-list');
-      listDiv.innerHTML = "";
-      virtualPosts.forEach((post, i) => {
-        const postDiv = document.createElement('div'); postDiv.className = 'post';
-        postDiv.innerHTML = `<div class="post-header">${i+1}: <b>${escapeHtml(post.name)}</b> ${post.date}</div><div>${escapeHtml(post.content)}</div>`;
+      if (error) return;
+
+      const listDiv = document.getElementById("post-list");
+      listDiv.innerHTML = data.length === 0 ? "<p style='color: #aaa; text-align: center; padding: 20px;'>まだ投稿はありません。</p>" : "";
+
+      data.forEach((post, index) => {
+        const dateStr = new Date(post.created_at).toLocaleString('ja-JP');
+        const postDiv = document.createElement("div");
+        postDiv.className = "post";
+        
+        // 🟥 管理者ログイン時だけ本物のIPアドレスと「削除」「ブロック」ボタンを表示
+        const ipDisplay = isManager ? `<span class="ip-label">IP: ${post.ip || '不明'}</span>` : "";
+        const adminControls = isManager ? `
+          <div style="display: inline-block; float: right;">
+            <button class="admin-btn del-btn" onclick="deletePost(${post.id})">削除</button>
+            <button class="admin-btn block-btn" onclick="blockIp('${post.ip}')">IPブロック</button>
+          </div>
+        ` : "";
+
+        postDiv.innerHTML = `
+          ${adminControls}
+          <div class="post-header">${index + 1}: <b>${escapeHtml(post.name)}</b> <span>${dateStr}</span> ${ipDisplay}</div>
+          <div class="post-content">${escapeHtml(post.content).replace(/\n/g, '<br>')}</div>
+        `;
         listDiv.appendChild(postDiv);
       });
-    }
-
-    function submitVirtualPost() {
-      const name = document.getElementById('user-name').value || "名無しさん(主)";
-      const content = document.getElementById('post-content').value;
-      if(!content.trim()) return alert("本文を入れてね");
-
-      const nowStr = new Date().toLocaleTimeString('ja-JP');
-      virtualPosts.push({ name: name, content: content, date: nowStr });
-      document.getElementById('post-content').value = "";
-      renderVirtualPosts();
-
-      setTimeout(() => {
-        const randomReply = aiResponses[Math.floor(Math.random() * aiResponses.length)];
-        virtualPosts.push({ name: "名無しさん", content: randomReply, date: new Date().toLocaleTimeString('ja-JP') });
-        renderVirtualPosts();
-      }, 1000);
-    }
-
-    function escapeHtml(str) { if (!str) return ""; return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-    renderVirtualPosts();
-  </script>
-</body>
-</html>
